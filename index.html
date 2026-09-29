@@ -22,11 +22,11 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
   </div>
 
   <div class="topnav">
-    <button onclick="show('home')">Início</button>
-    <button onclick="show('apply')">Fazer prova</button>
-    <button onclick="show('result')">Consultar resultado</button>
-    <button onclick="show('info')">Informações</button>
-    <button onclick="show('admin')">Administração</button>
+    <button data-view="home">Início</button>
+    <button data-view="apply">Fazer prova</button>
+    <button data-view="result">Consultar resultado</button>
+    <button data-view="info">Informações</button>
+    <button data-view="admin">Administração</button>
   </div>
 
   <section id="home" class="section">
@@ -34,9 +34,9 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
       <h2>Processo seletivo do Hospital Albert Einstein</h2>
       <p class="muted">Avaliação destinada exclusivamente ao roleplay do servidor Distrito Paulista.</p>
       <div class="grid section">
-        <div class="card"><h3>🩺 Fazer prova</h3><p class="muted">Cadastre seus dados do RP e realize a avaliação online.</p><button class="btn" onclick="show('apply')">Começar</button></div>
-        <div class="card"><h3>📋 Consultar resultado</h3><p class="muted">Veja se sua prova ainda está em análise, aprovada ou não aprovada.</p><button class="btn" onclick="show('result')">Consultar</button></div>
-        <div class="card"><h3>ℹ️ Informações do edital</h3><p class="muted">Entenda as regras e como funciona o processo seletivo.</p><button class="btn" onclick="show('info')">Ver informações</button></div>
+        <div class="card"><h3>🩺 Fazer prova</h3><p class="muted">Cadastre seus dados do RP e realize a avaliação online.</p><button class="btn" data-view="apply">Começar</button></div>
+        <div class="card"><h3>📋 Consultar resultado</h3><p class="muted">Veja se sua prova ainda está em análise, aprovada ou não aprovada.</p><button class="btn" data-view="result">Consultar</button></div>
+        <div class="card"><h3>ℹ️ Informações do edital</h3><p class="muted">Entenda as regras e como funciona o processo seletivo.</p><button class="btn" data-view="info">Ver informações</button></div>
       </div>
     </div>
   </section>
@@ -54,13 +54,13 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
         </div>
         <label><input id="consent" type="checkbox" /> Confirmo que as informações são verdadeiras dentro do contexto RP e concordo com o uso destes dados exclusivamente neste processo seletivo.</label>
         <div class="notice">Os dados informados serão utilizados exclusivamente no processo seletivo do Hospital Albert Einstein no Distrito Paulista RP.</div>
-        <button class="btn" onclick="loadExam()">Carregar prova</button>
+        <button class="btn" id="btnLoadExam">Carregar prova</button>
       </div>
       <div id="examBox" class="hidden section">
         <div class="progress"><div id="bar" class="bar"></div></div>
         <p id="prog" class="muted"></p>
         <div id="questions" class="stack"></div>
-        <button class="btn section" onclick="submitExam()">Enviar prova</button>
+        <button class="btn section" id="btnSubmitExam">Enviar prova</button>
       </div>
       <div id="submitSuccess" class="hidden section"></div>
     </div>
@@ -74,7 +74,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
         <label>Usuário do Discord<input id="res_discord" class="input" /></label>
         <label style="grid-column:1/-1">Protocolo (opcional)<input id="res_protocol" class="input" /></label>
       </div>
-      <button class="btn section" onclick="lookup()">Consultar</button>
+      <button class="btn section" id="btnLookup">Consultar</button>
       <div id="resultBox" class="section"></div>
     </div>
   </section>
@@ -100,20 +100,20 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
           <label>Usuário<input id="setup_user" class="input" /></label>
           <label>Senha (mín. 10 caracteres)<input id="setup_pass" type="password" class="input" /></label>
         </div>
-        <button class="btn section" onclick="setupAdmin()">Criar administrador</button>
+        <button class="btn section" id="btnSetupAdmin">Criar administrador</button>
       </div>
       <div id="adminLogin" class="hidden">
         <div class="formgrid">
           <label>Usuário<input id="login_user" class="input" /></label>
           <label>Senha<input id="login_pass" type="password" class="input" /></label>
         </div>
-        <button class="btn section" onclick="adminLogin()">Entrar</button>
+        <button class="btn section" id="btnAdminLogin">Entrar</button>
       </div>
       <div id="dashboard" class="hidden">
-        <div class="actions"><button class="btn sec" onclick="loadDashboard()">Atualizar</button><button class="btn danger" onclick="logout()">Sair</button></div>
+        <div class="actions"><button class="btn sec" id="btnRefreshDashboard">Atualizar</button><button class="btn danger" id="btnLogout">Sair</button></div>
         <div id="stats" class="statgrid section"></div>
         <div class="section">
-          <input id="search" class="input" placeholder="Buscar por nome, ID, Discord ou protocolo" oninput="renderTable()" />
+          <input id="search" class="input" placeholder="Buscar por nome, ID, Discord ou protocolo"  />
         </div>
         <div class="section"><table><thead><tr><th>Nome</th><th>ID</th><th>Discord</th><th>Status</th><th>Objetiva</th><th>Data</th><th></th></tr></thead><tbody id="candBody"></tbody></table></div>
         <div id="candDetail" class="section"></div>
@@ -128,40 +128,385 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
   </div>
 </div>
 <script>
-const API='https://rlrgqwpjnwepuxzagjbl.supabase.co/functions/v1/exam-api';
-let objective=[], essays=[], allCandidates=[], adminToken=localStorage.getItem('hp_admin_token')||'';
-function show(id){for(const x of ['home','apply','result','info','admin'])document.getElementById(x).classList.add('hidden');document.getElementById(id).classList.remove('hidden');if(id==='admin')initAdmin()}
-async function api(action,data={},auth=false){const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json',...(auth&&adminToken?{'Authorization':'Bearer '+adminToken}:{})},body:JSON.stringify({action,...data})});const j=await r.json().catch(()=>({error:'Resposta inválida'}));if(!r.ok)throw new Error(j.error||'Erro');return j}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-async function loadExam(){
-  const rp=rp_name.value.trim(), cid=+city_id.value, ag=+age.value, ph=phone.value.trim(), dc=discord.value.trim();
-  if(!rp||!cid||!ag||!ph||!dc||!consent.checked)return alert('Preencha todos os campos e aceite o aviso.');
-  const j=await api('questions');objective=j.objective;essays=j.essay;renderQuestions();candidateForm.classList.add('hidden');examBox.classList.remove('hidden')
+
+const API = 'https://rlrgqwpjnwepuxzagjbl.supabase.co/functions/v1/exam-api';
+const $ = (id) => document.getElementById(id);
+let objective = [];
+let essays = [];
+let allCandidates = [];
+let adminToken = localStorage.getItem('hp_admin_token') || '';
+
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (m) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[m]));
 }
-function renderQuestions(){
-  const box=document.getElementById('questions');box.innerHTML='';
-  objective.forEach(q=>{const d=document.createElement('div');d.className='q';d.innerHTML='<b>'+q.no+'. '+esc(q.text)+'</b>'+q.options.map(o=>'<label class="opt"><input type="radio" name="q'+q.no+'" value="'+o.key+'" onchange="updateProg()" /> '+esc(o.text)+'</label>').join('');box.appendChild(d)});
-  essays.forEach(q=>{const d=document.createElement('div');d.className='q';d.innerHTML='<b>'+q.no+'. '+esc(q.text)+'</b><textarea id="essay'+q.no+'" rows="6" maxlength="1200" oninput="updateProg()"></textarea><div class="muted">Máximo 1200 caracteres</div>';box.appendChild(d)});updateProg()
+
+function setView(id) {
+  ['home','apply','result','info','admin'].forEach((name) => {
+    const el = $(name);
+    if (el) el.classList.add('hidden');
+  });
+  const target = $(id);
+  if (target) target.classList.remove('hidden');
+  if (id === 'admin') initAdmin();
 }
-function updateProg(){let done=0;objective.forEach(q=>{if(document.querySelector('input[name=q'+q.no+']:checked'))done++});essays.forEach(q=>{if((document.getElementById('essay'+q.no)?.value||'').trim())done++});prog.textContent=done+'/15 respondidas';bar.style.width=(done/15*100)+'%'}
-async function submitExam(){
-  try{
-    const oa=objective.map(q=>{const e=document.querySelector('input[name=q'+q.no+']:checked');return e?{question_no:q.no,selected_key:e.value}:null}).filter(Boolean);
-    const ea=essays.map(q=>({question_no:q.no,answer:(document.getElementById('essay'+q.no)?.value||'').trim()}));
-    const j=await api('submit_exam',{rp_name:rp_name.value.trim(),city_id:+city_id.value,character_age:+age.value,phone:phone.value.trim(),discord:discord.value.trim(),consent:consent.checked,objective_answers:oa,essay_answers:ea});
-    examBox.classList.add('hidden');submitSuccess.classList.remove('hidden');submitSuccess.innerHTML='<div class="status blue"><h3>Prova enviada com sucesso</h3><p>Status: Em análise</p><p>Protocolo: <b>'+esc(j.protocol)+'</b></p><p>ID da cidade: '+esc(j.city_id)+'<br />Discord: '+esc(j.discord)+'</p><p>Anote seu protocolo e retorne a este site para acompanhar o resultado.</p></div>';
-  }catch(e){alert(e.message)}
+
+async function api(action, data = {}, auth = false) {
+  const headers = {'Content-Type':'application/json'};
+  if (auth && adminToken) headers.Authorization = 'Bearer ' + adminToken;
+  const response = await fetch(API, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({action, ...data})
+  });
+  const payload = await response.json().catch(() => ({error:'Resposta inválida do servidor.'}));
+  if (!response.ok) throw new Error(payload.error || 'Erro na solicitação.');
+  return payload;
 }
-async function lookup(){try{const j=await api('lookup_result',{city_id:+res_city.value,discord:res_discord.value.trim(),protocol:res_protocol.value.trim()});const r=j.result;let cls='blue',txt='Sua prova ainda está em análise pela direção.';if(r.status==='APROVADO'){cls='greenbg';txt='Parabéns! Você foi aprovado no processo seletivo.'}if(r.status==='NAO_APROVADO'){cls='redbg';txt='Neste momento você não foi aprovado. A direção poderá liberar uma nova tentativa.'}resultBox.innerHTML='<div class="status '+cls+'"><h3>'+txt+'</h3><p><b>'+esc(r.rp_name)+'</b></p><p>Protocolo: '+esc(r.protocol)+'<br />Enviado em: '+new Date(r.submitted_at).toLocaleString('pt-BR')+'</p><p>Nota objetiva: '+esc(r.objective_score)+'/12'+(r.essay_score!=null?'<br />Nota discursiva: '+esc(r.essay_score)+'/10':'')+(r.total_score!=null?'<br />Nota total: '+esc(r.total_score)+'/10':'')+'</p>'+(r.admin_message?'<p><b>Mensagem da direção:</b><br />'+esc(r.admin_message)+'</p>':'')+'</div>'}catch(e){resultBox.innerHTML='<div class="status redbg">'+esc(e.message)+'</div>'}}
-async function initAdmin(){adminMsg.innerHTML='';try{const s=await api('admin_init_status');if(adminToken){dashboard.classList.remove('hidden');adminLogin.classList.add('hidden');adminSetup.classList.add('hidden');await loadDashboard();return}if(s.needs_setup){adminSetup.classList.remove('hidden');adminLogin.classList.add('hidden')}else{adminSetup.classList.add('hidden');adminLogin.classList.remove('hidden')}}catch(e){adminMsg.textContent=e.message}}
-async function setupAdmin(){try{await api('admin_init',{username:setup_user.value,password:setup_pass.value});alert('Administrador criado. Faça login.');adminSetup.classList.add('hidden');adminLogin.classList.remove('hidden')}catch(e){alert(e.message)}}
-async function adminLogin(){try{const j=await api('admin_login',{username:login_user.value,password:login_pass.value});adminToken=j.token;localStorage.setItem('hp_admin_token',adminToken);adminLogin.classList.add('hidden');dashboard.classList.remove('hidden');await loadDashboard()}catch(e){alert(e.message)}}
-async function logout(){try{await api('admin_logout',{},true)}catch{}adminToken='';localStorage.removeItem('hp_admin_token');dashboard.classList.add('hidden');adminLogin.classList.remove('hidden')}
-async function loadDashboard(){try{const j=await api('admin_dashboard',{},true);allCandidates=j.candidates;stats.innerHTML=[['Total',j.stats.total],['Em análise',j.stats.em_analise],['Aprovados',j.stats.aprovados],['Não aprovados',j.stats.nao_aprovados],['Média objetiva',j.stats.media_objetiva]].map(x=>'<div class="stat"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('');renderTable()}catch(e){if(e.message.includes('Sessão'))logout();else alert(e.message)}}
-function renderTable(){const q=(search.value||'').toLowerCase();const rows=allCandidates.filter(c=>[c.rp_name,c.city_id,c.discord,c.protocol].join(' ').toLowerCase().includes(q));candBody.innerHTML=rows.map(c=>'<tr><td>'+esc(c.rp_name)+'</td><td>'+esc(c.city_id)+'</td><td>'+esc(c.discord)+'</td><td>'+esc(c.status)+'</td><td>'+esc(c.objective_score)+'/12</td><td>'+new Date(c.submitted_at).toLocaleDateString('pt-BR')+'</td><td><button class="btn sec" onclick="openCand(\\''+c.id+'\\')">Abrir</button></td></tr>').join('')}
-async function openCand(id){try{const j=await api('admin_candidate',{id},true),c=j.candidate;const om={};j.objective.forEach(a=>om[a.question_no]=a);const em={};j.essays.forEach(a=>em[a.question_no]=a.answer);candDetail.innerHTML='<div class="card"><h3>'+esc(c.rp_name)+' — ID '+esc(c.city_id)+'</h3><p>Telefone: '+esc(c.phone)+'<br />Discord: '+esc(c.discord)+'<br />Protocolo: '+esc(c.protocol)+'</p><h4>Objetivas</h4>'+j.questions.map(q=>'<div class="q"><b>'+q.no+'. '+esc(q.text)+'</b><div class="'+(om[q.no]?.is_correct?'greenbg':'redbg')+'" style="padding:8px;border-radius:8px;margin-top:8px">Resposta: '+esc(q.options.find(o=>o.key===om[q.no]?.selected_key)?.text||om[q.no]?.selected_key)+'</div></div>').join('')+'<h4>Discursivas</h4>'+j.essay_questions.map(q=>'<div class="q"><b>'+q.no+'. '+esc(q.text)+'</b><p>'+esc(em[q.no]||'')+'</p></div>').join('')+'<div class="formgrid section"><label>Nota discursiva (0 a 10)<input id="editEssay" class="input" value="'+(c.essay_score??'')+'" /></label><label>Status<select id="editStatus"><option value="EM_ANALISE">Em análise</option><option value="APROVADO">Aprovado</option><option value="NAO_APROVADO">Não aprovado</option></select></label></div><label class="section">Mensagem da direção<textarea id="editMsg" rows="4">'+esc(c.admin_message||'')+'</textarea></label><div class="actions section"><button class="btn green" onclick="saveCand(\\''+c.id+'\\')">Salvar resultado</button><button class="btn danger" onclick="releaseRetake(\\''+c.id+'\\')">Liberar nova tentativa</button></div></div>';editStatus.value=c.status}catch(e){alert(e.message)}}
-async function saveCand(id){try{const j=await api('admin_update',{id,status:editStatus.value,essay_score:editEssay.value===''?null:+editEssay.value,admin_message:editMsg.value},true);alert('Resultado atualizado. Nota total: '+(j.total_score??'aguardando nota discursiva'));await loadDashboard();await openCand(id)}catch(e){alert(e.message)}}
-async function releaseRetake(id){if(!confirm('Liberar uma nova tentativa para este candidato?'))return;try{await api('admin_release_retake',{id},true);alert('Nova tentativa liberada.');await loadDashboard();candDetail.innerHTML=''}catch(e){alert(e.message)}}
-show('home');
+
+function getCandidateData() {
+  return {
+    rp_name: $('rp_name').value.trim(),
+    city_id: Number($('city_id').value),
+    character_age: Number($('age').value),
+    phone: $('phone').value.trim(),
+    discord: $('discord').value.trim(),
+    consent: $('consent').checked
+  };
+}
+
+async function loadExam() {
+  try {
+    const d = getCandidateData();
+    if (!d.rp_name || !d.city_id || !d.character_age || !d.phone || !d.discord || !d.consent) {
+      alert('Preencha todos os campos e aceite o aviso.');
+      return;
+    }
+    const data = await api('questions');
+    objective = data.objective || [];
+    essays = data.essay || [];
+    renderQuestions();
+    $('candidateForm').classList.add('hidden');
+    $('examBox').classList.remove('hidden');
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+function renderQuestions() {
+  const box = $('questions');
+  box.innerHTML = '';
+
+  objective.forEach((q) => {
+    const div = document.createElement('div');
+    div.className = 'q';
+    const options = q.options.map((o) => {
+      return '<label class="opt"><input type="radio" name="q' + q.no + '" value="' + esc(o.key) + '"> ' + esc(o.text) + '</label>';
+    }).join('');
+    div.innerHTML = '<b>' + q.no + '. ' + esc(q.text) + '</b>' + options;
+    box.appendChild(div);
+  });
+
+  essays.forEach((q) => {
+    const div = document.createElement('div');
+    div.className = 'q';
+    div.innerHTML =
+      '<b>' + q.no + '. ' + esc(q.text) + '</b>' +
+      '<textarea id="essay' + q.no + '" rows="6" maxlength="1200"></textarea>' +
+      '<div class="muted">Máximo 1200 caracteres</div>';
+    box.appendChild(div);
+  });
+
+  updateProgress();
+}
+
+function updateProgress() {
+  let done = 0;
+  objective.forEach((q) => {
+    if (document.querySelector('input[name="q' + q.no + '"]:checked')) done++;
+  });
+  essays.forEach((q) => {
+    const el = $('essay' + q.no);
+    if (el && el.value.trim()) done++;
+  });
+  $('prog').textContent = done + '/15 respondidas';
+  $('bar').style.width = ((done / 15) * 100) + '%';
+}
+
+async function submitExam() {
+  try {
+    const oa = objective.map((q) => {
+      const el = document.querySelector('input[name="q' + q.no + '"]:checked');
+      return el ? {question_no:q.no, selected_key:el.value} : null;
+    }).filter(Boolean);
+
+    const ea = essays.map((q) => ({
+      question_no:q.no,
+      answer:($('essay' + q.no)?.value || '').trim()
+    }));
+
+    const candidate = getCandidateData();
+    const data = await api('submit_exam', {
+      ...candidate,
+      objective_answers:oa,
+      essay_answers:ea
+    });
+
+    $('examBox').classList.add('hidden');
+    $('submitSuccess').classList.remove('hidden');
+    $('submitSuccess').innerHTML =
+      '<div class="status blue">' +
+      '<h3>Prova enviada com sucesso</h3>' +
+      '<p>Status: Em análise</p>' +
+      '<p>Protocolo: <b>' + esc(data.protocol) + '</b></p>' +
+      '<p>ID da cidade: ' + esc(data.city_id) + '<br>Discord: ' + esc(data.discord) + '</p>' +
+      '<p>Anote seu protocolo e retorne a este site para acompanhar o resultado.</p>' +
+      '</div>';
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function lookupResult() {
+  const box = $('resultBox');
+  try {
+    const data = await api('lookup_result', {
+      city_id:Number($('res_city').value),
+      discord:$('res_discord').value.trim(),
+      protocol:$('res_protocol').value.trim()
+    });
+    const r = data.result;
+    let cls = 'blue';
+    let title = 'Sua prova ainda está em análise pela direção.';
+    if (r.status === 'APROVADO') {
+      cls = 'greenbg';
+      title = 'Parabéns! Você foi aprovado no processo seletivo.';
+    } else if (r.status === 'NAO_APROVADO') {
+      cls = 'redbg';
+      title = 'Neste momento você não foi aprovado. A direção poderá liberar uma nova tentativa.';
+    }
+    box.innerHTML =
+      '<div class="status ' + cls + '">' +
+      '<h3>' + esc(title) + '</h3>' +
+      '<p><b>' + esc(r.rp_name) + '</b></p>' +
+      '<p>Protocolo: ' + esc(r.protocol) + '<br>Enviado em: ' + new Date(r.submitted_at).toLocaleString('pt-BR') + '</p>' +
+      '<p>Nota objetiva: ' + esc(r.objective_score) + '/12' +
+      (r.essay_score != null ? '<br>Nota discursiva: ' + esc(r.essay_score) + '/10' : '') +
+      (r.total_score != null ? '<br>Nota total: ' + esc(r.total_score) + '/10' : '') +
+      '</p>' +
+      (r.admin_message ? '<p><b>Mensagem da direção:</b><br>' + esc(r.admin_message) + '</p>' : '') +
+      '</div>';
+  } catch (e) {
+    box.innerHTML = '<div class="status redbg">' + esc(e.message) + '</div>';
+  }
+}
+
+async function initAdmin() {
+  $('adminMsg').innerHTML = '';
+  try {
+    const state = await api('admin_init_status');
+    $('adminSetup').classList.add('hidden');
+    $('adminLogin').classList.add('hidden');
+    $('dashboard').classList.add('hidden');
+
+    if (adminToken) {
+      $('dashboard').classList.remove('hidden');
+      await loadDashboard();
+      return;
+    }
+
+    if (state.needs_setup) $('adminSetup').classList.remove('hidden');
+    else $('adminLogin').classList.remove('hidden');
+  } catch (e) {
+    $('adminMsg').textContent = e.message;
+  }
+}
+
+async function setupAdmin() {
+  try {
+    await api('admin_init', {
+      username:$('setup_user').value,
+      password:$('setup_pass').value
+    });
+    alert('Administrador criado. Faça login.');
+    $('adminSetup').classList.add('hidden');
+    $('adminLogin').classList.remove('hidden');
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function adminLogin() {
+  try {
+    const data = await api('admin_login', {
+      username:$('login_user').value,
+      password:$('login_pass').value
+    });
+    adminToken = data.token;
+    localStorage.setItem('hp_admin_token', adminToken);
+    $('adminLogin').classList.add('hidden');
+    $('dashboard').classList.remove('hidden');
+    await loadDashboard();
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function logout() {
+  try { await api('admin_logout', {}, true); } catch {}
+  adminToken = '';
+  localStorage.removeItem('hp_admin_token');
+  $('dashboard').classList.add('hidden');
+  $('adminLogin').classList.remove('hidden');
+}
+
+async function loadDashboard() {
+  try {
+    const data = await api('admin_dashboard', {}, true);
+    allCandidates = data.candidates || [];
+    const s = data.stats;
+    $('stats').innerHTML = [
+      ['Total', s.total],
+      ['Em análise', s.em_analise],
+      ['Aprovados', s.aprovados],
+      ['Não aprovados', s.nao_aprovados],
+      ['Média objetiva', s.media_objetiva]
+    ].map((x) => '<div class="stat"><span>' + esc(x[0]) + '</span><b>' + esc(x[1]) + '</b></div>').join('');
+    renderTable();
+  } catch (e) {
+    if (e.message.toLowerCase().includes('sessão')) logout();
+    else alert(e.message);
+  }
+}
+
+function renderTable() {
+  const q = ($('search').value || '').toLowerCase();
+  const rows = allCandidates.filter((c) => {
+    return [c.rp_name, c.city_id, c.discord, c.protocol].join(' ').toLowerCase().includes(q);
+  });
+  $('candBody').innerHTML = rows.map((c) => {
+    return '<tr>' +
+      '<td>' + esc(c.rp_name) + '</td>' +
+      '<td>' + esc(c.city_id) + '</td>' +
+      '<td>' + esc(c.discord) + '</td>' +
+      '<td>' + esc(c.status) + '</td>' +
+      '<td>' + esc(c.objective_score) + '/12</td>' +
+      '<td>' + new Date(c.submitted_at).toLocaleDateString('pt-BR') + '</td>' +
+      '<td><button class="btn sec cand-open" type="button" data-id="' + esc(c.id) + '">Abrir</button></td>' +
+      '</tr>';
+  }).join('');
+}
+
+async function openCandidate(id) {
+  try {
+    const data = await api('admin_candidate', {id}, true);
+    const c = data.candidate;
+    const om = {};
+    (data.objective || []).forEach((a) => om[a.question_no] = a);
+    const em = {};
+    (data.essays || []).forEach((a) => em[a.question_no] = a.answer);
+
+    const objectiveHtml = (data.questions || []).map((q) => {
+      const picked = q.options.find((o) => o.key === om[q.no]?.selected_key);
+      return '<div class="q">' +
+        '<b>' + q.no + '. ' + esc(q.text) + '</b>' +
+        '<div class="' + (om[q.no]?.is_correct ? 'greenbg' : 'redbg') + '" style="padding:8px;border-radius:8px;margin-top:8px">' +
+        'Resposta: ' + esc(picked?.text || om[q.no]?.selected_key || '') +
+        '</div></div>';
+    }).join('');
+
+    const essayHtml = (data.essay_questions || []).map((q) => {
+      return '<div class="q"><b>' + q.no + '. ' + esc(q.text) + '</b><p>' + esc(em[q.no] || '') + '</p></div>';
+    }).join('');
+
+    $('candDetail').innerHTML =
+      '<div class="card">' +
+      '<h3>' + esc(c.rp_name) + ' — ID ' + esc(c.city_id) + '</h3>' +
+      '<p>Telefone: ' + esc(c.phone) + '<br>Discord: ' + esc(c.discord) + '<br>Protocolo: ' + esc(c.protocol) + '</p>' +
+      '<h4>Objetivas</h4>' + objectiveHtml +
+      '<h4>Discursivas</h4>' + essayHtml +
+      '<div class="formgrid section">' +
+      '<label>Nota discursiva (0 a 10)<input id="editEssay" class="input" value="' + esc(c.essay_score ?? '') + '"></label>' +
+      '<label>Status<select id="editStatus">' +
+      '<option value="EM_ANALISE">Em análise</option>' +
+      '<option value="APROVADO">Aprovado</option>' +
+      '<option value="NAO_APROVADO">Não aprovado</option>' +
+      '</select></label></div>' +
+      '<label class="section">Mensagem da direção<textarea id="editMsg" rows="4">' + esc(c.admin_message || '') + '</textarea></label>' +
+      '<div class="actions section">' +
+      '<button id="btnSaveCandidate" class="btn green" type="button" data-id="' + esc(c.id) + '">Salvar resultado</button>' +
+      '<button id="btnReleaseRetake" class="btn danger" type="button" data-id="' + esc(c.id) + '">Liberar nova tentativa</button>' +
+      '</div></div>';
+
+    $('editStatus').value = c.status;
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function saveCandidate(id) {
+  try {
+    const data = await api('admin_update', {
+      id,
+      status:$('editStatus').value,
+      essay_score:$('editEssay').value === '' ? null : Number($('editEssay').value),
+      admin_message:$('editMsg').value
+    }, true);
+    alert('Resultado atualizado. Nota total: ' + (data.total_score ?? 'aguardando nota discursiva'));
+    await loadDashboard();
+    await openCandidate(id);
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function releaseRetake(id) {
+  if (!confirm('Liberar uma nova tentativa para este candidato?')) return;
+  try {
+    await api('admin_release_retake', {id}, true);
+    alert('Nova tentativa liberada.');
+    await loadDashboard();
+    $('candDetail').innerHTML = '';
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-view]').forEach((btn) => {
+    btn.addEventListener('click', () => setView(btn.getAttribute('data-view')));
+  });
+
+  $('btnLoadExam')?.addEventListener('click', loadExam);
+  $('btnSubmitExam')?.addEventListener('click', submitExam);
+  $('btnLookup')?.addEventListener('click', lookupResult);
+  $('btnSetupAdmin')?.addEventListener('click', setupAdmin);
+  $('btnAdminLogin')?.addEventListener('click', adminLogin);
+  $('btnRefreshDashboard')?.addEventListener('click', loadDashboard);
+  $('btnLogout')?.addEventListener('click', logout);
+  $('search')?.addEventListener('input', renderTable);
+  $('questions')?.addEventListener('change', updateProgress);
+  $('questions')?.addEventListener('input', updateProgress);
+
+  $('candBody')?.addEventListener('click', (event) => {
+    const btn = event.target.closest('.cand-open');
+    if (btn) openCandidate(btn.dataset.id);
+  });
+
+  $('candDetail')?.addEventListener('click', (event) => {
+    const save = event.target.closest('#btnSaveCandidate');
+    if (save) saveCandidate(save.dataset.id);
+    const retake = event.target.closest('#btnReleaseRetake');
+    if (retake) releaseRetake(retake.dataset.id);
+  });
+
+  setView('home');
+});
+
 </script>
 </body></html>

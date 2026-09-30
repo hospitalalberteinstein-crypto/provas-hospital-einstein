@@ -98,7 +98,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
       <div class="formgrid">
         <label>ID da cidade<input id="res_city" class="input" inputmode="numeric" /></label>
         <label>Usuário do Discord<input id="res_discord" class="input" /></label>
-        <label style="grid-column:1/-1">Protocolo (opcional)<input id="res_protocol" class="input" /></label>
+        <label style="grid-column:1/-1">Protocolo<input id="res_protocol" class="input" /></label>
       </div>
       <button class="btn section" id="btnLookup">Consultar</button>
       <div id="resultBox" class="section"></div>
@@ -302,11 +302,16 @@ async function submitExam() {
 
 async function lookupResult() {
   const box = $('resultBox');
+  const protocol = $('res_protocol').value.trim();
+  if (!protocol) {
+    box.innerHTML = '<div class="status redbg">Informe o protocolo gerado ao final da prova.</div>';
+    return;
+  }
   try {
     const data = await api('lookup_result', {
       city_id:Number($('res_city').value),
       discord:$('res_discord').value.trim(),
-      protocol:$('res_protocol').value.trim()
+      protocol
     });
     const r = data.result;
     let cls = 'blue';

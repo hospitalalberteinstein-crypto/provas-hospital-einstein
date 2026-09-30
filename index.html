@@ -23,14 +23,6 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
     <div class="pill">Exclusivo para GTA V / FiveM RP</div>
   </div>
 
-  <div class="topnav">
-    <button data-view="home">Início</button>
-    <button data-view="apply">Fazer prova</button>
-    <button data-view="result">Consultar resultado</button>
-    <button data-view="info">Informações</button>
-    <button data-view="admin">Administração</button>
-  </div>
-
   <section id="home" class="section">
     <div class="panel">
       <div class="home-hero-row">
@@ -53,16 +45,18 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
           <small>Hospital Albert Einstein • Distrito Paulista</small>
         </div>
       </div>
-      <div class="grid section">
+      <div class="grid section home-actions-grid">
         <div class="card"><h3>🩺 Fazer prova</h3><p class="muted">Cadastre seus dados do RP e realize a avaliação online.</p><button class="btn" data-view="apply">Começar</button></div>
         <div class="card"><h3>📋 Consultar resultado</h3><p class="muted">Veja se sua prova ainda está em análise, aprovada ou não aprovada.</p><button class="btn" data-view="result">Consultar</button></div>
         <div class="card"><h3>ℹ️ Informações do edital</h3><p class="muted">Entenda as regras e como funciona o processo seletivo.</p><button class="btn" data-view="info">Ver informações</button></div>
+        <div class="card admin-card"><h3>🔐 Administração</h3><p class="muted">Acesso exclusivo da direção para análise, notas e resultados dos candidatos.</p><button class="btn sec" data-view="admin">Acessar painel</button></div>
       </div>
     </div>
   </section>
 
   <section id="apply" class="section hidden">
     <div class="panel">
+      <button class="back-home" type="button" data-view="home">← Voltar ao início</button>
       <h2>Fazer prova</h2>
       <div id="candidateForm" class="stack">
         <div class="formgrid">
@@ -88,6 +82,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
 
   <section id="result" class="section hidden">
     <div class="panel">
+      <button class="back-home" type="button" data-view="home">← Voltar ao início</button>
       <h2>Consultar resultado</h2>
       <div class="formgrid">
         <label>ID da cidade<input id="res_city" class="input" inputmode="numeric" /></label>
@@ -101,6 +96,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
 
   <section id="info" class="section hidden">
     <div class="panel">
+      <button class="back-home" type="button" data-view="home">← Voltar ao início</button>
       <h2>Informações do edital</h2>
       <div class="stack">
         <div class="card"><b>Formato</b><p class="muted">12 questões objetivas e 3 discursivas.</p></div>
@@ -113,6 +109,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
 
   <section id="admin" class="section hidden">
     <div class="panel">
+      <button class="back-home" type="button" data-view="home">← Voltar ao início</button>
       <div class="admin-brand"><img src="assets/logo-hospital.svg" alt="Hospital Albert Einstein"><div><h2>Administração</h2><p>Painel da direção • Distrito Paulista RP</p></div></div>
       <div id="adminSetup" class="hidden">
         <p class="muted">Primeiro acesso: crie o administrador mestre.</p>

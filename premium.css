@@ -3,7 +3,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 10% 0,rgba(41,170,255,.22),transparent 28%),radial-gradient(circle at 90% 5%,rgba(86,210,255,.14),transparent 25%),linear-gradient(180deg,#06101b,#081523 28%,#07111d 100%);min-height:100vh}
 body:before,body:after{content:"";position:fixed;width:420px;height:420px;border-radius:50%;filter:blur(90px);opacity:.16;pointer-events:none;z-index:0}body:before{background:#0da8ff;top:-160px;left:-120px}body:after{background:#245cff;right:-140px;bottom:-180px}
 .wrap{position:relative;z-index:1;max-width:1180px;margin:auto;padding:22px}
-.hero{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;padding:20px 24px!important;margin-top:4px!important;background:rgba(9,18,32,.76)!important;border:1px solid var(--line)!important;border-radius:28px!important;box-shadow:var(--shadow)!important;backdrop-filter:blur(18px)!important;position:sticky!important;top:14px!important;z-index:30!important}
+.hero{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;padding:20px 24px!important;margin-top:4px!important;background:rgba(9,18,32,.76)!important;border:1px solid var(--line)!important;border-radius:28px!important;box-shadow:var(--shadow)!important;backdrop-filter:blur(18px)!important;position:relative!important;top:auto!important;z-index:2!important}
 .brand{display:flex!important;align-items:center!important;gap:18px!important}.hospital-logo{width:150px;max-width:30vw;height:auto;display:block;filter:drop-shadow(0 12px 28px rgba(30,167,255,.22))}
 .brand h1{font-size:clamp(23px,3vw,35px)!important;letter-spacing:-.03em}.sub{color:var(--muted)!important}.pill{border:1px solid rgba(86,210,255,.22)!important;background:linear-gradient(135deg,rgba(30,167,255,.18),rgba(86,210,255,.08))!important;color:#dff6ff!important;font-weight:700!important;padding:10px 14px!important}
 .topnav{margin:22px 0 0!important;gap:10px!important}.topnav button{background:rgba(9,18,32,.82)!important;border:1px solid rgba(255,255,255,.07)!important;color:var(--text)!important;padding:12px 16px!important;border-radius:14px!important;font-weight:700!important;transition:.18s ease!important}.topnav button:hover{transform:translateY(-2px);border-color:rgba(86,210,255,.36)!important;background:rgba(19,38,61,.95)!important}
@@ -22,3 +22,15 @@ table{background:rgba(255,255,255,.02);border-radius:18px;overflow:hidden}th{bac
 .admin-brand{display:flex;align-items:center;gap:16px;margin-bottom:20px}.admin-brand img{width:120px;height:auto}.admin-brand h2{margin:0}.admin-brand p{margin:5px 0 0;color:var(--muted)}
 .footer{color:#8ea5bf!important;line-height:1.7!important;padding:34px 0 12px!important}
 @media(max-width:800px){.wrap{padding:14px}.hero{position:relative!important;top:0!important;padding:16px!important;border-radius:22px!important;align-items:flex-start!important}.hospital-logo{width:105px;max-width:34vw}.pill{display:none!important}.grid,.statgrid,.formgrid{grid-template-columns:1fr!important}#home>.panel{padding:22px!important}.topnav{overflow:auto;flex-wrap:nowrap!important;padding-bottom:4px}.topnav button{white-space:nowrap}.admin-brand{align-items:flex-start}.admin-brand img{width:90px}}
+
+/* Cabeçalho estático: não acompanha a rolagem */
+.hero{
+  position:relative!important;
+  top:auto!important;
+  transform:none!important;
+  margin-top:0!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.24)!important;
+}
+@media(max-width:800px){
+  .hero{position:relative!important;top:auto!important}
+}

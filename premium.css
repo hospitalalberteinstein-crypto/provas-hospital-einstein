@@ -192,3 +192,43 @@ table{background:rgba(255,255,255,.02);border-radius:18px;overflow:hidden}th{bac
 @media(max-width:650px){
   .home-actions-grid{grid-template-columns:1fr!important}
 }
+
+/* Alinhamento dos cards principais */
+.home-actions-grid{
+  align-items:stretch!important;
+}
+.home-actions-grid .card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:255px!important;
+  padding:24px 22px!important;
+}
+.home-actions-grid .card h3{
+  min-height:56px!important;
+  margin:0 0 12px!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  gap:8px!important;
+  line-height:1.25!important;
+}
+.home-actions-grid .card p{
+  margin:0 0 22px!important;
+  line-height:1.6!important;
+  min-height:76px!important;
+}
+.home-actions-grid .card .btn{
+  margin-top:auto!important;
+  align-self:flex-start!important;
+  min-width:128px!important;
+}
+.home-actions-grid .admin-card .btn{
+  min-width:146px!important;
+}
+@media(max-width:1050px){
+  .home-actions-grid .card{min-height:230px!important}
+  .home-actions-grid .card h3{min-height:auto!important}
+  .home-actions-grid .card p{min-height:auto!important}
+}
+@media(max-width:650px){
+  .home-actions-grid .card{min-height:0!important}
+}

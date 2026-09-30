@@ -197,17 +197,17 @@ Deno.serve(async (req:Request) => {
   }
 
   if(action==="lookup_result") {
-    const city_id=Number(body.city_id); const discord=normalizeDiscord(clean(body.discord,100)); const proto=clean(body.protocol,50);
-    if(!Number.isInteger(city_id)||city_id<=0||!discord||!proto) return json({error:"Informe ID da cidade, Discord e protocolo."},400);
+    const city_id=Number(body.city_id); const rp_name=clean(body.rp_name,100); const proto=clean(body.protocol,50);
+    if(!Number.isInteger(city_id)||city_id<=0||!rp_name||!proto) return json({error:"Informe ID da cidade, nome do personagem e protocolo."},400);
     const {data,error}=await supabase.from("candidates")
-      .select("rp_name,city_id,discord,protocol,status,objective_score,essay_score,total_score,admin_message,submitted_at")
+      .select("rp_name,city_id,protocol,status,objective_score,essay_score,total_score,admin_message,submitted_at")
       .eq("city_id",city_id)
-      .ilike("discord",discord)
+      .ilike("rp_name",rp_name)
       .eq("protocol",proto)
       .order("submitted_at",{ascending:false})
       .limit(1)
       .maybeSingle();
-    if(error||!data) return json({error:"Resultado não encontrado. Confira ID, Discord e protocolo."},404);
+    if(error||!data) return json({error:"Resultado não encontrado. Confira ID, nome do personagem e protocolo."},404);
     return json({result:data});
   }
 

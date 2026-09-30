@@ -333,3 +333,56 @@ th,td{border-bottom:1px solid rgba(255,255,255,.05)!important}
 @media(max-width:980px){
   .editorial-card{max-width:720px}
 }
+
+/* Aviso de protocolo em destaque */
+.protocol-alert{
+  margin-top:24px;
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:16px;
+  padding:18px 20px;
+  border-radius:16px;
+  border:1px solid rgba(255,190,68,.28);
+  background:linear-gradient(135deg,rgba(255,183,58,.10),rgba(255,139,58,.05));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+}
+.protocol-alert-icon{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  background:rgba(255,186,59,.12);
+  border:1px solid rgba(255,190,68,.18);
+  font-size:23px;
+}
+.protocol-alert strong{
+  display:block;
+  color:#fff3cf;
+  font-size:17px;
+  margin-bottom:7px;
+}
+.protocol-alert p{
+  margin:0;
+  color:#c4d2df;
+  line-height:1.65;
+  font-size:14px;
+}
+.protocol-alert p b{color:#ffe49a}
+.protocol-alert span{
+  display:block;
+  margin-top:9px;
+  color:#ffd981;
+  font-size:13px;
+  font-weight:700;
+}
+@media(max-width:680px){
+  .protocol-alert{
+    grid-template-columns:1fr;
+    padding:16px;
+  }
+  .protocol-alert-icon{
+    width:42px;
+    height:42px;
+  }
+}

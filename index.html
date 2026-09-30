@@ -97,7 +97,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
       <h2>Consultar resultado</h2>
       <div class="formgrid">
         <label>ID da cidade<input id="res_city" class="input" inputmode="numeric" /></label>
-        <label>Usuário do Discord<input id="res_discord" class="input" /></label>
+        <label>Nome do personagem<input id="res_name" class="input" placeholder="Nome usado no RP" /></label>
         <label style="grid-column:1/-1">Protocolo<input id="res_protocol" class="input" /></label>
       </div>
       <button class="btn section" id="btnLookup">Consultar</button>
@@ -310,7 +310,7 @@ async function lookupResult() {
   try {
     const data = await api('lookup_result', {
       city_id:Number($('res_city').value),
-      discord:$('res_discord').value.trim(),
+      rp_name:$('res_name').value.trim(),
       protocol
     });
     const r = data.result;

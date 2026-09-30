@@ -10,12 +10,14 @@
 a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:flex;gap:20px;align-items:center;justify-content:space-between;padding:30px 0}.brand{display:flex;gap:16px;align-items:center}.logo{width:72px;height:72px;border-radius:20px;border:2px solid #3fb8ff;box-shadow:0 0 30px #1688ff66;display:grid;place-items:center;font-size:34px;font-weight:900;background:linear-gradient(145deg,#0f73df,#0b2b51)}h1{margin:0;font-size:clamp(28px,5vw,48px)}.sub{color:var(--muted);margin-top:6px}.pill{border:1px solid #2e82c9;background:#0a2340;padding:10px 14px;border-radius:999px;color:#bfe4ff;font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:linear-gradient(180deg,#10233a,#0a1626);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 18px 60px #0005}.card h3{margin-top:0}.btn{border:0;border-radius:14px;padding:13px 18px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#1c8cff,#36c3ff);color:white}.btn.sec{background:#122a44;border:1px solid #2c567d}.btn.danger{background:#7a2230}.btn.green{background:#16734c}.stack{display:grid;gap:14px}.hidden{display:none!important}.section{margin-top:24px}.panel{background:#081523cc;border:1px solid var(--line);border-radius:22px;padding:22px;backdrop-filter:blur(8px)}label{font-size:13px;color:#c8def5}.input,textarea,select{width:100%;margin-top:6px;background:#06111e;border:1px solid #234867;color:white;border-radius:12px;padding:12px 13px;outline:none}.input:focus,textarea:focus,select:focus{border-color:#39c5ff;box-shadow:0 0 0 3px #39c5ff22}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.actions{display:flex;gap:10px;flex-wrap:wrap}.q{padding:16px;border:1px solid #1f3f5f;border-radius:16px;background:#0a1726}.opt{display:block;padding:10px;border:1px solid #274a6a;border-radius:12px;margin-top:8px}.opt:hover{border-color:#39c5ff}.progress{height:10px;background:#0a1622;border-radius:99px;overflow:hidden;border:1px solid #1d3d59}.bar{height:100%;background:linear-gradient(90deg,#1d8fff,#43d8ff);width:0}.status{padding:12px 14px;border-radius:12px;font-weight:700}.blue{background:#0f3760}.greenbg{background:#124d35}.redbg{background:#59242b}.muted{color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px;border-bottom:1px solid #17324c;text-align:left}.statgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.stat{background:#0d2035;border:1px solid #214565;border-radius:14px;padding:14px}.stat b{font-size:24px;display:block}.footer{color:#8299b2;font-size:12px;line-height:1.5;padding:28px 0 10px;text-align:center}.notice{border-left:4px solid #2daeff;background:#0a2036;padding:13px 14px;border-radius:10px}.topnav{display:flex;gap:8px;flex-wrap:wrap}.topnav button{background:#0e2740;border:1px solid #244b6a;color:white;border-radius:12px;padding:10px 14px;cursor:pointer}
 @media(max-width:800px){.grid,.statgrid,.formgrid{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.wrap{padding:16px}.card{padding:16px}table{display:block;overflow:auto}}
 </style>
+  <link rel="icon" type="image/svg+xml" href="assets/logo-hospital.svg">
+  <link rel="stylesheet" href="premium.css">
 </head>
 <body>
 <div class="wrap">
   <div class="hero">
     <div class="brand">
-      <div class="logo">✚</div>
+      <img class="hospital-logo" src="assets/logo-hospital.svg" alt="Hospital Albert Einstein">
       <div><h1>Hospital Albert Einstein</h1><div class="sub">Sistema de Provas • Distrito Paulista RP</div></div>
     </div>
     <div class="pill">Exclusivo para GTA V / FiveM RP</div>
@@ -93,7 +95,7 @@ a{color:inherit}.wrap{max-width:1100px;margin:auto;padding:24px}.hero{display:fl
 
   <section id="admin" class="section hidden">
     <div class="panel">
-      <h2>Administração</h2>
+      <div class="admin-brand"><img src="assets/logo-hospital.svg" alt="Hospital Albert Einstein"><div><h2>Administração</h2><p>Painel da direção • Distrito Paulista RP</p></div></div>
       <div id="adminSetup" class="hidden">
         <p class="muted">Primeiro acesso: crie o administrador mestre.</p>
         <div class="formgrid">
